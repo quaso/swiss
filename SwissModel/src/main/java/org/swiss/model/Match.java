@@ -19,9 +19,7 @@ public class Match extends AbstractEntity {
 
 	private int score2;
 
-	private int subScore1;
-
-	private int subScore2;
+	private int roundNumber;
 
 	public Tournament getTournament() {
 		return this.tournament;
@@ -63,20 +61,12 @@ public class Match extends AbstractEntity {
 		this.score2 = score2;
 	}
 
-	public int getSubScore1() {
-		return this.subScore1;
+	public int getRoundNumber() {
+		return this.roundNumber;
 	}
 
-	public void setSubScore1(final int subScore1) {
-		this.subScore1 = subScore1;
-	}
-
-	public int getSubScore2() {
-		return this.subScore2;
-	}
-
-	public void setSubScore2(final int subScore2) {
-		this.subScore2 = subScore2;
+	public void setRoundNumber(final int roundNumber) {
+		this.roundNumber = roundNumber;
 	}
 
 	@Override

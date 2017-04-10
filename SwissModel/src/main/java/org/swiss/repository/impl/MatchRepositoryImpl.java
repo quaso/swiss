@@ -24,7 +24,7 @@ public class MatchRepositoryImpl implements MatchRepository {
 
 	@Override
 	public void save(final Match match) {
-		this.map.put(this.createKey(match.getPlayer1().getName(), match.getPlayer2().getName()), match);
+		this.map.put(this.createKey(match.getPlayer1().getId(), match.getPlayer2().getId()), match);
 	}
 
 	private String createKey(final String player1Id, final String player2Id) {

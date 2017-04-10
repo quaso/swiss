@@ -36,17 +36,26 @@ public class TournamentTest {
 		final List<String> players = Arrays.asList("a", "b", "c", "d", "e", "f", "g", "h");
 		this.tournamentService.setPlayers(TOURNAMENT_NAME, players);
 		final Round round1 = this.tournamentService.addNewRound(TOURNAMENT_NAME);
-		this.print(round1);
 
-		this.matchService.addMatchResult(TOURNAMENT_NAME, 1, "a", "b", 4, 3);
-		this.matchService.addMatchResult(TOURNAMENT_NAME, 1, "c", "d", 4, 2);
-		this.matchService.addMatchResult(TOURNAMENT_NAME, 1, "e", "f", 4, 1);
-		this.matchService.addMatchResult(TOURNAMENT_NAME, 1, "g", "h", 4, 0);
+		this.matchService.addMatchResult("a", "b", 3, 4);
+		this.matchService.addMatchResult("c", "d", 4, 2);
+		this.matchService.addMatchResult("e", "f", 4, 1);
+		this.matchService.addMatchResult("g", "h", 4, 0);
 		this.print(round1);
 
 		final Round round2 = this.tournamentService.addNewRound(TOURNAMENT_NAME);
 		this.print(round2.getPlayers());
+
+		this.matchService.addMatchResult("g", "e", 4, 0);
+		this.matchService.addMatchResult("c", "b", 4, 3);
+		this.matchService.addMatchResult("a", "d", 4, 3);
+		this.matchService.addMatchResult("f", "h", 4, 3);
 		this.print(round2);
+
+		final Round round3 = this.tournamentService.addNewRound(TOURNAMENT_NAME);
+
+		this.print(round3.getPlayers());
+		this.print(round3);
 
 	}
 

@@ -5,7 +5,7 @@ package org.swiss.model;
 //@Table(name = "Player")
 public class Player extends AbstractEntity {
 
-	// @Column(name = "name", nullable = true, length = 255)
+	// @Column(name = "name", nullable = true, length = 255, unique=true)
 	private String name;
 
 	private int points = 0;

@@ -21,14 +21,14 @@ public class PlayerComparator implements Comparator<Player> {
 		// 1. compare points
 		int result = -1 * Integer.compare(p1.getPoints(), p2.getPoints());
 		if (result == 0) {
-			// 2. compare match against each other
-			final Player winner = this.matchService.getWinner(p1, p2);
-			if (winner != null) {
-				result = (p1.equals(winner)) ? -1 : 1;
-			} else {
-				// 3. compare score
-				result = -1 * Integer.compare(p1.getScore(), p2.getScore());
-				if (result == 0) {
+			// 2. compare score
+			result = -1 * Integer.compare(p1.getScore(), p2.getScore());
+			if (result == 0) {
+				// 3. compare match against each other
+				final Player winner = this.matchService.getWinner(p1, p2);
+				if (winner != null) {
+					result = p1.equals(winner) ? -1 : 1;
+				} else {
 					// 4. decide based on order in previous round
 					for (int i = 0; i < this.previousOrder.size(); i++) {
 						final Player p = this.previousOrder.get(i);

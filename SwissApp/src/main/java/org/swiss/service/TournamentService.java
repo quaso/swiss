@@ -20,6 +20,9 @@ public class TournamentService {
 	@Autowired
 	private RoundService roundService;
 
+	@Autowired
+	private PlayerService playerService;
+
 	public Tournament find(final String name) {
 		return this.tournamentRepository.findByName(name)
 				.orElseThrow(() -> new IllegalStateException("tournament [" + name + "] not found"));
@@ -46,7 +49,7 @@ public class TournamentService {
 
 	public void setPlayers(final String tournamentName, final List<String> players) {
 		final Tournament tournament = this.find(tournamentName);
-		players.forEach(s -> tournament.getPlayers().add(new Player(s)));
+		players.forEach(s -> tournament.getPlayers().add(this.playerService.save(new Player(s))));
 
 		this.tournamentRepository.save(tournament);
 	}

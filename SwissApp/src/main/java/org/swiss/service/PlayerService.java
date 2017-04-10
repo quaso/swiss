@@ -15,4 +15,8 @@ public class PlayerService {
 		return this.playerRepository.findByName(name)
 				.orElseThrow(() -> new IllegalStateException("player [" + name + "] cannot be found"));
 	}
+
+	public Player save(final Player player) {
+		return this.playerRepository.save(player);
+	}
 }

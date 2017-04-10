@@ -21,4 +21,13 @@ public class PlayerRepositoryImpl implements PlayerRepository {
 		return Optional.empty();
 	}
 
+	@Override
+	public Player save(final Player player) {
+		if (this.map.containsKey(player.getName())) {
+			throw new IllegalStateException("Player with name [" + player.getName() + "] exists already");
+		}
+		this.map.put(player.getName(), player);
+		return player;
+	}
+
 }
