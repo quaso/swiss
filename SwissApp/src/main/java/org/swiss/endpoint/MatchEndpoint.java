@@ -16,7 +16,7 @@ public class MatchEndpoint {
 	@Autowired
 	private MatchService matchService;
 
-	@RequestMapping(method = RequestMethod.POST, value = "/")
+	@RequestMapping(method = RequestMethod.POST, value = "")
 	@ResponseStatus(HttpStatus.CREATED)
 	public void createUser(final @RequestParam String player1Name, final @RequestParam String player2Name,
 			final @RequestParam int score1, final @RequestParam int score2) {

@@ -21,18 +21,16 @@ public class RoundEndpoint {
 	@Autowired
 	private TournamentService tournamentService;
 
-	@RequestMapping(method = RequestMethod.POST, value = "/")
+	@RequestMapping(method = RequestMethod.POST, value = "")
 	public ResponseEntity<Round> addNewRound(final @RequestParam String tournamentName) {
 		return new ResponseEntity<>(this.tournamentService.addNewRound(tournamentName), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/")
-	public ResponseEntity<Round> getCurrent(final @RequestParam String tournamentName) {
-		return new ResponseEntity<>(this.roundService.getLatest(tournamentName), HttpStatus.OK);
-	}
-
-	@RequestMapping(method = RequestMethod.GET, value = "/")
-	public ResponseEntity<Round> getCurrent(final @RequestParam String tournamentName, @RequestParam final int number) {
+	@RequestMapping(method = RequestMethod.GET, value = "")
+	public ResponseEntity<Round> getCurrent(final @RequestParam String tournamentName, @RequestParam(required = false) final Integer number) {
+		if (number == null){
+			return new ResponseEntity<>(this.roundService.getLatest(tournamentName), HttpStatus.OK);
+		}
 		return new ResponseEntity<>(this.roundService.getRound(tournamentName, number), HttpStatus.OK);
 	}
 }
