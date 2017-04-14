@@ -75,6 +75,10 @@ public class MatchService {
 		return match;
 	}
 
+	public void deleteForTournament(final Tournament tournament) {
+		this.matchRepository.deleteByTournamentName(tournament.getName());
+	}
+
 	private Player getWinner(final Match match) {
 		return match.getScore1() > match.getScore2() ? match.getPlayer1() : match.getPlayer2();
 	}

@@ -16,7 +16,12 @@ public class PlayerService {
 				.orElseThrow(() -> new IllegalStateException("player [" + name + "] cannot be found"));
 	}
 
-	public Player save(final Player player) {
+	public Player save(final String tournamentName, final Player player) {
 		return this.playerRepository.save(player);
+	}
+
+	public void delete(final Iterable<Player> players) {
+		this.playerRepository.delete(players);
+
 	}
 }

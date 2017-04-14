@@ -30,4 +30,9 @@ public class PlayerRepositoryImpl implements PlayerRepository {
 		return player;
 	}
 
+	@Override
+	public void delete(final Iterable<Player> players) {
+		players.forEach(p -> this.map.entrySet().removeIf(e -> e.getKey().equals(p.getName())));
+	}
+
 }

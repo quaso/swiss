@@ -23,6 +23,9 @@ public class TournamentService {
 	@Autowired
 	private PlayerService playerService;
 
+	@Autowired
+	private MatchService matchService;
+
 	public Tournament find(final String name) {
 		return this.tournamentRepository.findByName(name)
 				.orElseThrow(() -> new IllegalStateException("tournament [" + name + "] not found"));
@@ -32,7 +35,7 @@ public class TournamentService {
 		final Optional<Tournament> existingTournament = this.tournamentRepository.findByName(name);
 		if (existingTournament.isPresent()) {
 			if (overwrite) {
-				this.tournamentRepository.delete(existingTournament.get());
+				this.deleteTournament(existingTournament.get());
 			} else {
 				return false;
 			}
@@ -49,7 +52,7 @@ public class TournamentService {
 
 	public void setPlayers(final String tournamentName, final List<String> players) {
 		final Tournament tournament = this.find(tournamentName);
-		players.forEach(s -> tournament.getPlayers().add(this.playerService.save(new Player(s))));
+		players.forEach(s -> tournament.getPlayers().add(this.playerService.save(tournamentName, new Player(s))));
 
 		this.tournamentRepository.save(tournament);
 	}
@@ -67,5 +70,13 @@ public class TournamentService {
 
 	public Round addNewRound(final String tournamentName) {
 		return this.roundService.addNewRound(this.find(tournamentName));
+	}
+
+	private void deleteTournament(final Tournament tournament) {
+		this.roundService.deleteForTournament(tournament);
+		this.matchService.deleteForTournament(tournament);
+		this.playerService.delete(tournament.getPlayers());
+		this.tournamentRepository.delete(tournament);
+
 	}
 }

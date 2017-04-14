@@ -9,4 +9,6 @@ public interface RoundRepository {// extends CrudRepository<Round, String> {
 	public Round getRoundByNumber(String tournamentName, int number);
 
 	public void save(Round round);
+
+	public void deleteByTournamentName(String tournamentName);
 }

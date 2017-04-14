@@ -27,6 +27,11 @@ public class MatchRepositoryImpl implements MatchRepository {
 		this.map.put(this.createKey(match.getPlayer1().getId(), match.getPlayer2().getId()), match);
 	}
 
+	@Override
+	public void deleteByTournamentName(final String name) {
+		this.map.entrySet().removeIf(e -> e.getValue().getTournament().getName().equals(name));
+	}
+
 	private String createKey(final String player1Id, final String player2Id) {
 		return player1Id + "_vs_" + player2Id;
 	}

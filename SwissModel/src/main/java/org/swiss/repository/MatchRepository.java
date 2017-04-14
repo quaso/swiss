@@ -10,4 +10,6 @@ public interface MatchRepository {// extends CrudRepository<Match, String> {
 	Optional<Match> findMatchByPlayer1IdAndPlayer2Id(String player1Id, String player2Id);
 
 	void save(Match match);
+
+	public void deleteByTournamentName(String name);
 }

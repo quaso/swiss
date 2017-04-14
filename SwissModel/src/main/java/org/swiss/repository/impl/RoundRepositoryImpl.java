@@ -31,4 +31,9 @@ public class RoundRepositoryImpl implements RoundRepository {
 		this.map.get(round.getTournamentName()).add(round);
 	}
 
+	@Override
+	public void deleteByTournamentName(final String tournamentName) {
+		this.map.remove(tournamentName);
+	}
+
 }

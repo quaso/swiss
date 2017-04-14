@@ -61,4 +61,8 @@ public class RoundService {
 		players.sort(this.playerComparator);
 		return players;
 	}
+
+	public void deleteForTournament(final Tournament tournament) {
+		this.roundRepository.deleteByTournamentName(tournament.getName());
+	}
 }
