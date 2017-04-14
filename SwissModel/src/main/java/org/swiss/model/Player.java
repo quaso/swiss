@@ -11,15 +11,15 @@ public class Player extends AbstractEntity {
 	private int points = 0;
 	private int score = 0;
 
-	// @ManyToOne
-	private Tournament tournament;
+	private String tournamentName;
 
 	public Player() {
 	}
 
-	public Player(final String name) {
+	public Player(final String name, final String tournamentName) {
 		this();
 		this.name = name;
+		this.tournamentName = tournamentName;
 	}
 
 	public String getName() {
@@ -46,12 +46,8 @@ public class Player extends AbstractEntity {
 		this.score = score;
 	}
 
-	public Tournament getTournament() {
-		return this.tournament;
-	}
-
-	public void setTournament(final Tournament tournament) {
-		this.tournament = tournament;
+	public String getTournamentName() {
+		return this.tournamentName;
 	}
 
 	public String toStringExtended() {

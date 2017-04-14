@@ -56,7 +56,7 @@ public class TournamentService {
 		if (shuffle) {
 			Collections.shuffle(players);
 		}
-		players.forEach(s -> tournament.getPlayers().add(this.playerService.save(tournamentName, new Player(s))));
+		players.forEach(s -> tournament.getPlayers().add(this.playerService.save(new Player(s, tournamentName))));
 
 		this.tournamentRepository.save(tournament);
 	}

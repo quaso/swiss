@@ -11,12 +11,12 @@ public class PlayerService {
 	@Autowired
 	private PlayerRepository playerRepository;
 
-	public Player find(final String name) {
-		return this.playerRepository.findByName(name)
+	public Player find(final String name, final String tournamentName) {
+		return this.playerRepository.findByNameAndTournamentName(name, tournamentName)
 				.orElseThrow(() -> new IllegalStateException("player [" + name + "] cannot be found"));
 	}
 
-	public Player save(final String tournamentName, final Player player) {
+	public Player save(final Player player) {
 		return this.playerRepository.save(player);
 	}
 

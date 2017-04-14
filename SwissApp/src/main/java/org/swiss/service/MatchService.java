@@ -28,8 +28,9 @@ public class MatchService {
 		return result;
 	}
 
-	public void addMatchResult(final String player1Name, final String player2Name, final int score1, final int score2) {
-		final Match match = this.findMatch(player1Name, player2Name)
+	public void addMatchResult(final String tournamentName, final String player1Name, final String player2Name,
+			final int score1, final int score2) {
+		final Match match = this.findMatch(player1Name, player2Name, tournamentName)
 				.orElseThrow(() -> new IllegalStateException("Match not found"));
 
 		if (player1Name.equals(match.getPlayer1().getName())) {
@@ -51,8 +52,9 @@ public class MatchService {
 		this.matchRepository.save(match);
 	}
 
-	public Optional<Match> findMatch(final String player1Name, final String player2Name) {
-		return this.findMatch(this.playerService.find(player1Name), this.playerService.find(player2Name));
+	public Optional<Match> findMatch(final String player1Name, final String player2Name, final String tournamentName) {
+		return this.findMatch(this.playerService.find(player1Name, tournamentName),
+				this.playerService.find(player2Name, tournamentName));
 	}
 
 	public Optional<Match> findMatch(final Player player1, final Player player2) {

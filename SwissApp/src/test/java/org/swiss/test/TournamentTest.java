@@ -38,20 +38,20 @@ public class TournamentTest {
 		this.tournamentService.setPlayers(TOURNAMENT_NAME, players, false);
 		final Round round1 = this.tournamentService.addNewRound(TOURNAMENT_NAME);
 
-		this.matchService.addMatchResult("a", "b", 3, 4);
-		this.matchService.addMatchResult("c", "d", 4, 2);
-		this.matchService.addMatchResult("e", "f", 4, 1);
-		this.matchService.addMatchResult("g", "h", 4, 0);
+		this.matchService.addMatchResult(TOURNAMENT_NAME, "a", "b", 3, 4);
+		this.matchService.addMatchResult(TOURNAMENT_NAME, "c", "d", 4, 2);
+		this.matchService.addMatchResult(TOURNAMENT_NAME, "e", "f", 4, 1);
+		this.matchService.addMatchResult(TOURNAMENT_NAME, "g", "h", 4, 0);
 		this.print(round1);
 
 		final Round round2 = this.tournamentService.addNewRound(TOURNAMENT_NAME);
 		this.print(round2.getPlayers());
 		Assert.assertNull(this.compare(round2, "g", "e", "c", "b", "a", "d", "f", "h"));
 
-		this.matchService.addMatchResult("e", "g", 0, 4);
-		this.matchService.addMatchResult("c", "b", 4, 3);
-		this.matchService.addMatchResult("a", "d", 4, 3);
-		this.matchService.addMatchResult("f", "h", 4, 3);
+		this.matchService.addMatchResult(TOURNAMENT_NAME, "e", "g", 0, 4);
+		this.matchService.addMatchResult(TOURNAMENT_NAME, "c", "b", 4, 3);
+		this.matchService.addMatchResult(TOURNAMENT_NAME, "a", "d", 4, 3);
+		this.matchService.addMatchResult(TOURNAMENT_NAME, "f", "h", 4, 3);
 		this.print(round2);
 
 		final Round round3 = this.tournamentService.addNewRound(TOURNAMENT_NAME);
@@ -67,8 +67,8 @@ public class TournamentTest {
 		this.tournamentService.setPlayers(TOURNAMENT_NAME, players, false);
 		final Round round1 = this.tournamentService.addNewRound(TOURNAMENT_NAME);
 
-		this.matchService.addMatchResult("a", "b", 4, 2);
-		this.matchService.addMatchResult("c", "d", 4, 2);
+		this.matchService.addMatchResult(TOURNAMENT_NAME, "a", "b", 4, 2);
+		this.matchService.addMatchResult(TOURNAMENT_NAME, "c", "d", 4, 2);
 		this.print(round1);
 
 		final Round round2 = this.tournamentService.addNewRound(TOURNAMENT_NAME);

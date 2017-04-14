@@ -16,10 +16,10 @@ public class MatchEndpoint {
 	@Autowired
 	private MatchService matchService;
 
-	@RequestMapping(method = RequestMethod.POST, value = "")
+	@RequestMapping(method = RequestMethod.POST, value = "/")
 	@ResponseStatus(HttpStatus.CREATED)
-	public void createUser(final @RequestParam String player1Name, final @RequestParam String player2Name,
-			final @RequestParam int score1, final @RequestParam int score2) {
-		this.matchService.addMatchResult(player1Name, player2Name, score1, score2);
+	public void createUser(final @RequestParam String tournamentName, final @RequestParam String player1Name,
+			final @RequestParam String player2Name, final @RequestParam int score1, final @RequestParam int score2) {
+		this.matchService.addMatchResult(tournamentName, player1Name, player2Name, score1, score2);
 	}
 }
