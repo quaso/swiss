@@ -51,9 +51,11 @@ public class TournamentService {
 		return this.find(tournamentName).getPlayers();
 	}
 
-	public void setPlayers(final String tournamentName, final List<String> players) {
+	public void setPlayers(final String tournamentName, final List<String> players, final boolean shuffle) {
 		final Tournament tournament = this.find(tournamentName);
-		Collections.shuffle(players);
+		if (shuffle) {
+			Collections.shuffle(players);
+		}
 		players.forEach(s -> tournament.getPlayers().add(this.playerService.save(tournamentName, new Player(s))));
 
 		this.tournamentRepository.save(tournament);

@@ -35,7 +35,7 @@ public class TournamentTest {
 	public void test1() {
 		this.tournamentService.createTournament(TOURNAMENT_NAME, true);
 		final List<String> players = Arrays.asList("a", "b", "c", "d", "e", "f", "g", "h");
-		this.tournamentService.setPlayers(TOURNAMENT_NAME, players);
+		this.tournamentService.setPlayers(TOURNAMENT_NAME, players, false);
 		final Round round1 = this.tournamentService.addNewRound(TOURNAMENT_NAME);
 
 		this.matchService.addMatchResult("a", "b", 3, 4);
@@ -64,7 +64,7 @@ public class TournamentTest {
 	public void test2() {
 		this.tournamentService.createTournament(TOURNAMENT_NAME, true);
 		final List<String> players = Arrays.asList("a", "b", "c", "d");
-		this.tournamentService.setPlayers(TOURNAMENT_NAME, players);
+		this.tournamentService.setPlayers(TOURNAMENT_NAME, players, false);
 		final Round round1 = this.tournamentService.addNewRound(TOURNAMENT_NAME);
 
 		this.matchService.addMatchResult("a", "b", 4, 2);

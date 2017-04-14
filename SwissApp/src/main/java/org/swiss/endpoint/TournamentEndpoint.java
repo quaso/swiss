@@ -33,7 +33,7 @@ public class TournamentEndpoint {
 				result = new ResponseEntity<>(HttpStatus.CONFLICT);
 			}
 		} else {
-			this.tournamentService.setPlayers(tournamentName, players);
+			this.tournamentService.setPlayers(tournamentName, players, true);
 			result = new ResponseEntity<>(HttpStatus.CREATED);
 		}
 
