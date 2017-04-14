@@ -1,5 +1,6 @@
 package org.swiss.service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,6 +53,7 @@ public class TournamentService {
 
 	public void setPlayers(final String tournamentName, final List<String> players) {
 		final Tournament tournament = this.find(tournamentName);
+		Collections.shuffle(players);
 		players.forEach(s -> tournament.getPlayers().add(this.playerService.save(tournamentName, new Player(s))));
 
 		this.tournamentRepository.save(tournament);

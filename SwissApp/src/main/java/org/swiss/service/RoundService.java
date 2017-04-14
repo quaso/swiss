@@ -24,6 +24,14 @@ public class RoundService {
 	@Autowired
 	private PlayerComparator playerComparator;
 
+	public Round getLatest(final String tournamentName) {
+		return this.getRound(tournamentName, this.roundRepository.countByTournamentName(tournamentName));
+	}
+
+	public Round getRound(final String tournamentName, final int number) {
+		return this.roundRepository.getRoundByNumber(tournamentName, number);
+	}
+
 	public Round addNewRound(final Tournament tournament) {
 		final Round round = new Round();
 		round.setTournamentName(tournament.getName());
