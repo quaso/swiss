@@ -21,16 +21,32 @@ public class RoundEndpoint {
 	@Autowired
 	private TournamentService tournamentService;
 
-	@RequestMapping(method = RequestMethod.POST, value = "")
-	public ResponseEntity<Round> addNewRound(final @RequestParam String tournamentName) {
-		return new ResponseEntity<>(this.tournamentService.addNewRound(tournamentName), HttpStatus.CREATED);
-	}
-
 	@RequestMapping(method = RequestMethod.GET, value = "")
-	public ResponseEntity<Round> getCurrent(final @RequestParam String tournamentName, @RequestParam(required = false) final Integer number) {
-		if (number == null){
-			return new ResponseEntity<>(this.roundService.getLatest(tournamentName), HttpStatus.OK);
+	public ResponseEntity<Round> getRound(final @RequestParam String tournamentName,
+			@RequestParam(required = false) final Integer number) {
+		ResponseEntity<Round> result;
+		if (number == null) {
+			result = new ResponseEntity<>(this.roundService.getLatest(tournamentName), HttpStatus.OK);
+		} else {
+			final int maxRounds = this.roundService.getRoundCount(tournamentName);
+			if (number <= 0) {
+				result = new ResponseEntity<Round>(HttpStatus.NO_CONTENT);
+			} else if (number <= maxRounds) {
+				result = new ResponseEntity<>(this.roundService.getRound(tournamentName, number), HttpStatus.OK);
+			} else if (number == maxRounds + 1) {
+				// check if all matches in latest round are finished
+				if (this.roundService.areAllMatchesFinished(tournamentName, number - 1)) {
+					// create new round
+					result = new ResponseEntity<>(this.tournamentService.addNewRound(tournamentName),
+							HttpStatus.CREATED);
+				} else {
+					// predict
+					result = new ResponseEntity<Round>(HttpStatus.I_AM_A_TEAPOT);
+				}
+			} else {
+				result = new ResponseEntity<Round>(HttpStatus.NO_CONTENT);
+			}
 		}
-		return new ResponseEntity<>(this.roundService.getRound(tournamentName, number), HttpStatus.OK);
+		return result;
 	}
 }

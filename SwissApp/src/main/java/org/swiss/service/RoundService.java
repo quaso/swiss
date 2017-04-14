@@ -24,8 +24,12 @@ public class RoundService {
 	@Autowired
 	private PlayerComparator playerComparator;
 
+	public int getRoundCount(final String tournamentName) {
+		return this.roundRepository.countByTournamentName(tournamentName);
+	}
+
 	public Round getLatest(final String tournamentName) {
-		return this.getRound(tournamentName, this.roundRepository.countByTournamentName(tournamentName));
+		return this.getRound(tournamentName, this.getRoundCount(tournamentName));
 	}
 
 	public Round getRound(final String tournamentName, final int number) {
@@ -35,12 +39,12 @@ public class RoundService {
 	public Round addNewRound(final Tournament tournament) {
 		final Round round = new Round();
 		round.setTournamentName(tournament.getName());
-		round.setNumber(this.roundRepository.countByTournamentName(tournament.getName()));
+		round.setNumber(this.getRoundCount(tournament.getName()) + 1);
 
-		if (round.getNumber() == 0) {
+		if (round.getNumber() == 1) {
 			round.setPlayers(tournament.getPlayers());
 		} else {
-			round.setPlayers(this.calculateOrder(tournament, round.getNumber()));
+			round.setPlayers(this.calculateOrder(tournament, round.getNumber() - 1));
 		}
 
 		final List<Player> players = new ArrayList<>(round.getPlayers());
@@ -72,5 +76,10 @@ public class RoundService {
 
 	public void deleteForTournament(final Tournament tournament) {
 		this.roundRepository.deleteByTournamentName(tournament.getName());
+	}
+
+	public boolean areAllMatchesFinished(final String tournamentName, final int roundNumber) {
+		final Round round = this.getRound(tournamentName, roundNumber);
+		return round.getMatches().stream().allMatch(m -> m.isFinished());
 	}
 }

@@ -69,6 +69,10 @@ public class Match extends AbstractEntity {
 		this.roundNumber = roundNumber;
 	}
 
+	public boolean isFinished() {
+		return this.score1 > 0 || this.score2 > 0;
+	}
+
 	@Override
 	public String toString() {
 		String score = "";
