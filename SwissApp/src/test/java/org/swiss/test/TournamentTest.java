@@ -37,11 +37,21 @@ public class TournamentTest {
 	private RoundEndpoint roundEndpoint;
 
 	@Test
+	public void test0() {
+		this.tournamentService.createTournament(TOURNAMENT_NAME, true);
+		final List<String> players = Arrays.asList("a", "b", "c", "d", "e", "f", "g", "h");
+		this.tournamentService.setPlayers(TOURNAMENT_NAME, players, false);
+		Assert.assertEquals(HttpStatus.CREATED, this.roundEndpoint.getRound(TOURNAMENT_NAME, null).getStatusCode());
+	}
+
+	@Test
 	public void test1() {
 		this.tournamentService.createTournament(TOURNAMENT_NAME, true);
 		final List<String> players = Arrays.asList("a", "b", "c", "d", "e", "f", "g", "h");
 		this.tournamentService.setPlayers(TOURNAMENT_NAME, players, false);
-		final Round round1 = this.tournamentService.addNewRound(TOURNAMENT_NAME);
+		// final Round round1 =
+		// this.tournamentService.addNewRound(TOURNAMENT_NAME);
+		final Round round1 = this.roundEndpoint.getRound(TOURNAMENT_NAME, null).getBody();
 		Assert.assertEquals(1, round1.getNumber());
 
 		this.matchService.addMatchResult(TOURNAMENT_NAME, "a", "b", 3, 4);

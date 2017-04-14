@@ -25,27 +25,27 @@ public class RoundEndpoint {
 	public ResponseEntity<Round> getRound(final @RequestParam String tournamentName,
 			@RequestParam(required = false) final Integer number) {
 		ResponseEntity<Round> result;
-		if (number == null) {
-			result = new ResponseEntity<>(this.roundService.getLatest(tournamentName), HttpStatus.OK);
-		} else {
-			final int maxRounds = this.roundService.getRoundCount(tournamentName);
-			if (number <= 0) {
-				result = new ResponseEntity<Round>(HttpStatus.NO_CONTENT);
-			} else if (number <= maxRounds) {
-				result = new ResponseEntity<>(this.roundService.getRound(tournamentName, number), HttpStatus.OK);
-			} else if (number == maxRounds + 1) {
-				// check if all matches in latest round are finished
-				if (this.roundService.areAllMatchesFinished(tournamentName, number - 1)) {
-					// create new round
-					result = new ResponseEntity<>(this.tournamentService.addNewRound(tournamentName),
-							HttpStatus.CREATED);
-				} else {
-					// predict
-					result = new ResponseEntity<Round>(HttpStatus.I_AM_A_TEAPOT);
-				}
+
+		final int maxRounds = this.roundService.getRoundCount(tournamentName);
+		final int roundNumber = (number == null) ? maxRounds : number;
+		if (roundNumber == 0 && maxRounds == 0) {
+			// create first round
+			result = new ResponseEntity<>(this.tournamentService.addNewRound(tournamentName), HttpStatus.CREATED);
+		} else if (roundNumber <= 0) {
+			result = new ResponseEntity<Round>(HttpStatus.NO_CONTENT);
+		} else if (roundNumber <= maxRounds) {
+			result = new ResponseEntity<>(this.roundService.getRound(tournamentName, roundNumber), HttpStatus.OK);
+		} else if (roundNumber == maxRounds + 1) {
+			// check if all matches in latest round are finished
+			if (this.roundService.areAllMatchesFinished(tournamentName, roundNumber - 1)) {
+				// create new round
+				result = new ResponseEntity<>(this.tournamentService.addNewRound(tournamentName), HttpStatus.CREATED);
 			} else {
-				result = new ResponseEntity<Round>(HttpStatus.NO_CONTENT);
+				// predict
+				result = new ResponseEntity<Round>(HttpStatus.I_AM_A_TEAPOT);
 			}
+		} else {
+			result = new ResponseEntity<Round>(HttpStatus.NO_CONTENT);
 		}
 		return result;
 	}
