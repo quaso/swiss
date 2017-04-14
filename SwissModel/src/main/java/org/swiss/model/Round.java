@@ -1,7 +1,8 @@
 package org.swiss.model;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 //@Entity
@@ -17,7 +18,9 @@ public class Round extends AbstractEntity {
 	private List<Player> players;
 
 	// @OneToMany(mappedBy = "tournament")
-	private List<Match> matches;
+	private Collection<Match> matches;
+
+	private boolean partial = false;
 
 	public int getNumber() {
 		return this.number;
@@ -35,9 +38,9 @@ public class Round extends AbstractEntity {
 		this.tournamentName = tournamentName;
 	}
 
-	public List<Match> getMatches() {
+	public Collection<Match> getMatches() {
 		if (this.matches == null) {
-			this.matches = new ArrayList<>();
+			this.matches = new HashSet<>();
 		}
 		return this.matches;
 	}
@@ -48,6 +51,14 @@ public class Round extends AbstractEntity {
 
 	public void setPlayers(final List<Player> players) {
 		this.players = Collections.unmodifiableList(players);
+	}
+
+	public boolean isPartial() {
+		return this.partial;
+	}
+
+	public void setPartial(final boolean partial) {
+		this.partial = partial;
 	}
 
 }

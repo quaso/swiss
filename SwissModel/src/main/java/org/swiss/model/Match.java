@@ -73,6 +73,15 @@ public class Match extends AbstractEntity {
 		return this.score1 > 0 || this.score2 > 0;
 	}
 
+	public IPlayerScore getWinner() {
+		return this.score1 > this.score2 ? this.player1 : this.player2;
+	}
+
+	public IPlayerScore getLooser() {
+		final IPlayerScore winner = this.getWinner();
+		return this.player1.getName().equals(winner.getName()) ? this.player2 : this.player1;
+	}
+
 	@Override
 	public String toString() {
 		String score = "";

@@ -42,7 +42,8 @@ public class RoundEndpoint {
 				result = new ResponseEntity<>(this.tournamentService.addNewRound(tournamentName), HttpStatus.CREATED);
 			} else {
 				// predict
-				result = new ResponseEntity<Round>(HttpStatus.I_AM_A_TEAPOT);
+				result = new ResponseEntity<>(this.roundService.predictNextRoundOrder(tournamentName, roundNumber),
+						HttpStatus.PARTIAL_CONTENT);
 			}
 		} else {
 			result = new ResponseEntity<Round>(HttpStatus.NO_CONTENT);

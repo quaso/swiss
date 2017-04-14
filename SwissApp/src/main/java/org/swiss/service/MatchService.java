@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.swiss.model.IPlayerScore;
 import org.swiss.model.Match;
 import org.swiss.model.Player;
 import org.swiss.model.Tournament;
@@ -19,11 +20,16 @@ public class MatchService {
 	@Autowired
 	private PlayerService playerService;
 
-	public Player getWinner(final Player player1, final Player player2) {
-		Player result = null;
-		final Optional<Match> match = this.findMatch(player1, player2);
+	public IPlayerScore getWinner(final IPlayerScore player1, final IPlayerScore player2) {
+		IPlayerScore result = null;
+		Optional<Match> match;
+		if (player1 instanceof Player && player2 instanceof Player) {
+			match = this.findMatch((Player) player1, (Player) player2);
+		} else {
+			match = this.findMatch(player1.getName(), player2.getName(), player1.getTournamentName());
+		}
 		if (match.isPresent()) {
-			result = this.getWinner(match.get());
+			result = match.get().getWinner();
 		}
 		return result;
 	}
@@ -79,10 +85,6 @@ public class MatchService {
 
 	public void deleteForTournament(final Tournament tournament) {
 		this.matchRepository.deleteByTournamentName(tournament.getName());
-	}
-
-	private Player getWinner(final Match match) {
-		return match.getScore1() > match.getScore2() ? match.getPlayer1() : match.getPlayer2();
 	}
 
 	private class MatchResult {

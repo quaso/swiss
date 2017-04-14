@@ -3,12 +3,14 @@ package org.swiss.test;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.swiss.endpoint.RoundEndpoint;
@@ -65,10 +67,18 @@ public class TournamentTest {
 		this.print(round2.getPlayers());
 		Assert.assertNull(this.compare(round2, "g", "e", "c", "b", "a", "d", "f", "h"));
 
+		Assert.assertNull(this.compare(this.roundEndpoint.getRound(TOURNAMENT_NAME, 3).getBody(), null, null, null,
+				null, null, null, null, null));
 		this.matchService.addMatchResult(TOURNAMENT_NAME, "e", "g", 0, 4);
+		Assert.assertNull(this.compare(this.roundEndpoint.getRound(TOURNAMENT_NAME, 3).getBody(), "g", null, null, null,
+				null, null, null, null));
 		this.matchService.addMatchResult(TOURNAMENT_NAME, "c", "b", 4, 3);
+		Assert.assertNull(this.compare(this.roundEndpoint.getRound(TOURNAMENT_NAME, 3).getBody(), "g", "c", null, null,
+				null, null, null, null));
 		this.matchService.addMatchResult(TOURNAMENT_NAME, "a", "d", 4, 3);
-		Assert.assertEquals(HttpStatus.I_AM_A_TEAPOT, this.roundEndpoint.getRound(TOURNAMENT_NAME, 3).getStatusCode());
+		final ResponseEntity<Round> round3ResponseEntity = this.roundEndpoint.getRound(TOURNAMENT_NAME, 3);
+		Assert.assertEquals(HttpStatus.PARTIAL_CONTENT, round3ResponseEntity.getStatusCode());
+		Assert.assertNull(this.compare(round3ResponseEntity.getBody(), "g", "c", null, null, null, null, "d", null));
 		this.matchService.addMatchResult(TOURNAMENT_NAME, "f", "h", 4, 3);
 		this.print(round2);
 
@@ -76,7 +86,8 @@ public class TournamentTest {
 		Assert.assertEquals(HttpStatus.OK, this.roundEndpoint.getRound(TOURNAMENT_NAME, 1).getStatusCode());
 		Assert.assertEquals(HttpStatus.OK, this.roundEndpoint.getRound(TOURNAMENT_NAME, 2).getStatusCode());
 		Assert.assertEquals(HttpStatus.CREATED, this.roundEndpoint.getRound(TOURNAMENT_NAME, 3).getStatusCode());
-		Assert.assertEquals(HttpStatus.I_AM_A_TEAPOT, this.roundEndpoint.getRound(TOURNAMENT_NAME, 4).getStatusCode());
+		Assert.assertEquals(HttpStatus.PARTIAL_CONTENT,
+				this.roundEndpoint.getRound(TOURNAMENT_NAME, 4).getStatusCode());
 		Assert.assertEquals(HttpStatus.NO_CONTENT, this.roundEndpoint.getRound(TOURNAMENT_NAME, 5).getStatusCode());
 
 		final Round round3 = this.roundEndpoint.getRound(TOURNAMENT_NAME, null).getBody();
@@ -84,6 +95,8 @@ public class TournamentTest {
 		this.print(round3.getPlayers());
 		this.print(round3);
 		Assert.assertNull(this.compare(round3, "g", "c", "b", "a", "e", "f", "d", "h"));
+		Assert.assertNull(this.compare(this.roundEndpoint.getRound(TOURNAMENT_NAME, 4).getBody(), null, null, null,
+				null, null, null, null, null));
 	}
 
 	@Test
@@ -117,9 +130,10 @@ public class TournamentTest {
 	private String compare(final Round round, final String... expectedOrder) {
 		String result = null;
 		for (int i = 0; i < expectedOrder.length; i++) {
-			if (!expectedOrder[i].equals(round.getPlayers().get(i).getName())) {
-				result = "Player at " + i + " is [" + round.getPlayers().get(i).getName() + "] expected ["
-						+ expectedOrder[i] + "]";
+			final Player player = round.getPlayers().get(i);
+			final String realName = (player != null) ? player.getName() : null;
+			if (!StringUtils.equals(expectedOrder[i], realName)) {
+				result = "Player at " + i + " is [" + realName + "] expected [" + expectedOrder[i] + "]";
 				break;
 			}
 		}

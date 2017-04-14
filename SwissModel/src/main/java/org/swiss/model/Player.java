@@ -3,7 +3,7 @@ package org.swiss.model;
 //@Entity
 //@Proxy(lazy = false)
 //@Table(name = "Player")
-public class Player extends AbstractEntity {
+public class Player extends AbstractEntity implements IPlayerScore {
 
 	// @Column(name = "name", nullable = true, length = 255, unique=true)
 	private String name;
@@ -22,6 +22,7 @@ public class Player extends AbstractEntity {
 		this.tournamentName = tournamentName;
 	}
 
+	@Override
 	public String getName() {
 		return this.name;
 	}
@@ -30,6 +31,7 @@ public class Player extends AbstractEntity {
 		this.name = name;
 	}
 
+	@Override
 	public int getPoints() {
 		return this.points;
 	}
@@ -38,6 +40,7 @@ public class Player extends AbstractEntity {
 		this.points = points;
 	}
 
+	@Override
 	public int getScore() {
 		return this.score;
 	}
@@ -46,17 +49,14 @@ public class Player extends AbstractEntity {
 		this.score = score;
 	}
 
+	@Override
 	public String getTournamentName() {
 		return this.tournamentName;
 	}
 
-	public String toStringExtended() {
-		return "Player [name=" + this.name + ", points=" + this.points + ", score=" + this.score + "]";
-	}
-
 	@Override
 	public String toString() {
-		return "Player [" + this.name + "]";
+		return this.toStringExtended();
 	}
 
 }

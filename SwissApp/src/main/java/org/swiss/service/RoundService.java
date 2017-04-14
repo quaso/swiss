@@ -5,11 +5,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.swiss.model.Match;
 import org.swiss.model.Player;
 import org.swiss.model.Round;
 import org.swiss.model.Tournament;
 import org.swiss.repository.RoundRepository;
 import org.swiss.util.PlayerComparator;
+import org.swiss.util.RoundPredicter;
 
 @Service
 // @Transactional
@@ -22,7 +24,13 @@ public class RoundService {
 	private MatchService matchService;
 
 	@Autowired
+	private PlayerService playerService;
+
+	@Autowired
 	private PlayerComparator playerComparator;
+
+	@Autowired
+	private RoundPredicter roundPredicter;
 
 	public int getRoundCount(final String tournamentName) {
 		return this.roundRepository.countByTournamentName(tournamentName);
@@ -69,8 +77,7 @@ public class RoundService {
 	private List<Player> calculateOrder(final Tournament tournament, final int roundNumber) {
 		final Round round = this.roundRepository.getRoundByNumber(tournament.getName(), roundNumber);
 		final List<Player> players = new ArrayList<>(round.getPlayers());
-		this.playerComparator.setPreviousOrder(round.getPlayers());
-		players.sort(this.playerComparator);
+		this.playerComparator.compare(players, round.getPlayers());
 		return players;
 	}
 
@@ -81,5 +88,43 @@ public class RoundService {
 	public boolean areAllMatchesFinished(final String tournamentName, final int roundNumber) {
 		final Round round = this.getRound(tournamentName, roundNumber);
 		return round.getMatches().stream().allMatch(m -> m.isFinished());
+	}
+
+	public Round predictNextRoundOrder(final String tournamentName, final int nextRoundNumber) {
+		final Round round = new Round();
+		round.setPartial(true);
+		round.setTournamentName(tournamentName);
+		round.setNumber(nextRoundNumber);
+
+		final List<String> playerNames = this.roundPredicter.predictNextRoundOrder(this.getLatest(tournamentName));
+		final List<Player> players = new ArrayList<>();
+		playerNames.forEach(pn -> players.add((pn == null) ? null : this.playerService.find(pn, tournamentName)));
+		round.setPlayers(players);
+
+		final List<Player> players2 = new ArrayList<>(players);
+		while (!players2.isEmpty()) {
+			final Player player1 = players2.remove(0);
+			if (player1 == null) {
+				break;
+			}
+			int i = 0;
+			while (players2.get(i) != null && this.matchService.findMatch(player1, players2.get(i)).isPresent()) {
+				i++;
+				if (players2.size() == i) {
+					throw new IllegalStateException("Cannot find opponent for " + player1.getName());
+				}
+			}
+			final Player player2 = players2.remove(i);
+
+			if (player2 != null) {
+				final Match match = new Match();
+				match.setPlayer1(player1);
+				match.setPlayer2(player2);
+				match.setRoundNumber(nextRoundNumber);
+				round.getMatches().add(match);
+			}
+		}
+
+		return round;
 	}
 }

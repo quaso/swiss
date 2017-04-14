@@ -8,15 +8,20 @@ import org.swiss.configuration.DatasourceConfiguration;
 import org.swiss.endpoint.MatchEndpoint;
 import org.swiss.service.MatchService;
 import org.swiss.util.PlayerComparator;
+import org.swiss.util.RoundPredicter;
 
 @Configuration
 @Import({ DatasourceConfiguration.class })
-@ComponentScan(basePackageClasses = { MatchService.class, MatchEndpoint.class})
-// , SeasonEndpoint.class, WebResourceHandler.class })
+@ComponentScan(basePackageClasses = { MatchService.class, MatchEndpoint.class })
 public class AppConfiguration {
 
 	@Bean
 	public PlayerComparator playerComparator() {
 		return new PlayerComparator();
+	}
+
+	@Bean
+	public RoundPredicter roundPredicter() {
+		return new RoundPredicter();
 	}
 }
