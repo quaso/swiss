@@ -13,16 +13,17 @@ import org.swiss.model.Match;
 import org.swiss.model.Round;
 
 public class RoundPredicter {
-	// TODO: this cannot be a constant, but tournament specific value!
-	private static final int MAX_SCORE = 4;
 
 	@Autowired
 	private PlayerComparator playerComparator;
 
 	private String[] order;
 
-	public synchronized List<String> predictNextRoundOrder(final Round current) {
+	private int maxScorePerRound;
+
+	public synchronized List<String> predictNextRoundOrder(final Round current, final int maxScorePerRound) {
 		this.order = null;
+		this.maxScorePerRound = maxScorePerRound;
 		final Map<String, FuturePlayer> players = new HashMap<>();
 		current.getPlayers().forEach(p -> players.put(p.getName(), new FuturePlayer(p)));
 
@@ -72,15 +73,15 @@ public class RoundPredicter {
 
 	private List<Pair> getMatchScoreCombinations(final Match match) {
 		final List<Pair> result = new ArrayList<>();
-		int score = MAX_SCORE + 1;
+		int score = this.maxScorePerRound + 1;
 		final FuturePlayer player1 = new FuturePlayer(match.getPlayer1());
 		final FuturePlayer player2 = new FuturePlayer(match.getPlayer2());
-		for (int i = 0; i < MAX_SCORE; i++) {
+		for (int i = 0; i < this.maxScorePerRound; i++) {
 			score--;
 			result.add(new Pair(player1.matchResult(true, score), player2.matchResult(false, score), score));
 		}
-		score = MAX_SCORE + 1;
-		for (int i = 0; i < MAX_SCORE; i++) {
+		score = this.maxScorePerRound + 1;
+		for (int i = 0; i < this.maxScorePerRound; i++) {
 			score--;
 			result.add(new Pair(player1.matchResult(false, score), player2.matchResult(true, score), score));
 		}

@@ -27,6 +27,9 @@ public class RoundService {
 	private PlayerService playerService;
 
 	@Autowired
+	private TournamentService tournamentService;
+
+	@Autowired
 	private PlayerComparator playerComparator;
 
 	@Autowired
@@ -96,7 +99,8 @@ public class RoundService {
 		round.setTournamentName(tournamentName);
 		round.setNumber(nextRoundNumber);
 
-		final List<String> playerNames = this.roundPredicter.predictNextRoundOrder(this.getLatest(tournamentName));
+		final List<String> playerNames = this.roundPredicter.predictNextRoundOrder(this.getLatest(tournamentName),
+				this.tournamentService.find(tournamentName).getMaxScorePerRound());
 		final List<Player> players = new ArrayList<>();
 		playerNames.forEach(pn -> players.add((pn == null) ? null : this.playerService.find(pn, tournamentName)));
 		round.setPlayers(players);

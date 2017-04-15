@@ -23,9 +23,11 @@ public class TournamentEndpoint {
 
 	@RequestMapping(method = RequestMethod.POST, value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> createTournament(final @RequestParam String tournamentName,
-			@RequestParam final boolean overwrite, final @RequestBody List<String> players) {
+			@RequestParam final int maxScorePerRound, @RequestParam final boolean overwrite,
+			final @RequestBody List<String> players) {
 		ResponseEntity<?> result;
-		final boolean tournamentCreated = this.tournamentService.createTournament(tournamentName, overwrite);
+		final boolean tournamentCreated = this.tournamentService.createTournament(tournamentName, maxScorePerRound,
+				overwrite);
 		if (!tournamentCreated) {
 			if (overwrite) {
 				// fatal error

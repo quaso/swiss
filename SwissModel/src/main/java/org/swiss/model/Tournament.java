@@ -11,6 +11,8 @@ public class Tournament extends AbstractEntity {
 	// @Column(name = "name", nullable = false)
 	private String name;
 
+	private int maxScorePerRound;
+
 	// @OneToMany(mappedBy = "tournament")
 	private List<Player> players;
 
@@ -22,6 +24,14 @@ public class Tournament extends AbstractEntity {
 
 	public void setName(final String name) {
 		this.name = name;
+	}
+
+	public int getMaxScorePerRound() {
+		return this.maxScorePerRound;
+	}
+
+	public void setMaxScorePerRound(final int maxScorePerRound) {
+		this.maxScorePerRound = maxScorePerRound;
 	}
 
 	public List<Player> getPlayers() {

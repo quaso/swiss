@@ -32,7 +32,7 @@ public class TournamentService {
 				.orElseThrow(() -> new IllegalStateException("tournament [" + name + "] not found"));
 	}
 
-	public boolean createTournament(final String name, final boolean overwrite) {
+	public boolean createTournament(final String name, final int maxScorePerRound, final boolean overwrite) {
 		final Optional<Tournament> existingTournament = this.tournamentRepository.findByName(name);
 		if (existingTournament.isPresent()) {
 			if (overwrite) {
@@ -43,6 +43,7 @@ public class TournamentService {
 		}
 		final Tournament tournament = new Tournament();
 		tournament.setName(name);
+		tournament.setMaxScorePerRound(maxScorePerRound);
 		this.tournamentRepository.save(tournament);
 		return true;
 	}
